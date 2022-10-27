@@ -2,8 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
+import { DirectionalLight } from 'three'
 
 /**
  * Base
@@ -17,59 +16,47 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+/**
+ * Lights
+ */
+// Ambient light
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
+scene.add(ambientLight)
+
+// Directional light
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
+directionalLight.position.set(2, 2, - 1)
+gui.add(directionalLight, 'intensity').min(0).max(1).step(0.001)
+gui.add(directionalLight.position, 'x').min(- 5).max(5).step(0.001)
+gui.add(directionalLight.position, 'y').min(- 5).max(5).step(0.001)
+gui.add(directionalLight.position, 'z').min(- 5).max(5).step(0.001)
+scene.add(directionalLight)
 
 /**
- * Textures
+ * Materials
  */
-const textureLoader = new THREE.TextureLoader()
-const matcapTexture = textureLoader.load('/textures/matcaps/1.png')
+const material = new THREE.MeshStandardMaterial()
+material.roughness = 0.7
+gui.add(material, 'metalness').min(0).max(1).step(0.001)
+gui.add(material, 'roughness').min(0).max(1).step(0.001)
 
-const fontLoader = new FontLoader()
-
-fontLoader.load(
-    '/fonts/helvetiker_regular.typeface.json',
-    (font) =>
-    {
-        const textGeometry = new TextGeometry(
-            'Hello World',
-            {
-                font: font,
-                size: 0.5,
-                height: 0.2,
-                curveSegments: 5,
-                bevelEnabled: true,
-                bevelThickness: 0.03,
-                bevelSize: 0.02,
-                bevelOffset: 0,
-                bevelSegments: 4
-            }
-        )
-
-        // textGeometry.computeBoundingBox()
-        // textGeometry.translate(
-        //     - textGeometry.boundingBox.max.x * 0.5,
-        //     - textGeometry.boundingBox.max.y * 0.5,
-        //     - textGeometry.boundingBox.max.z * 0.5
-        // )
-
-        textGeometry.center()
-        const textMaterial = new THREE.MeshMatcapMaterial({matcap: matcapTexture })
-        const text = new THREE.Mesh(textGeometry, textMaterial)
-        scene.add(text)
-
-         
-    }
+/**
+ * Objects
+ */
+const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.5, 32, 32),
+    material
 )
 
-// /**
-//  * Object
-//  */
-// const cube = new THREE.Mesh(
-//     new THREE.BoxGeometry(1, 1, 1),
-//     new THREE.MeshBasicMaterial()
-// )
+const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(5, 5),
+    material
+)
+plane.rotation.x = - Math.PI * 0.5
+plane.position.y = - 0.5
 
-// scene.add(cube)
+scene.add(sphere, plane)
 
 /**
  * Sizes
@@ -78,6 +65,13 @@ const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
 }
+
+directionalLight.castShadow = true
+directionalLight.shadow.mapSize.width = 1024
+directionalLight.shadow.mapSize.height = 1024
+
+sphere.castShadow = true
+plane.receiveShadow = true
 
 window.addEventListener('resize', () =>
 {
@@ -116,7 +110,7 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
+renderer.shadowMap.enabled = true
 /**
  * Animate
  */
