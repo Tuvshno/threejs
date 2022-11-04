@@ -2,9 +2,12 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
+<<<<<<< HEAD
 import galaxtVertexShader from './shaders/vertex.glsl'
 import galaxtFragmentShader from './shaders/fragment.glsl'
 import { BufferAttribute } from 'three'
+=======
+>>>>>>> 35916a56f11011823bbb7b3bf7488b3b66a775a1
 
 /**
  * Base
@@ -52,8 +55,11 @@ const generateGalaxy = () =>
 
     const positions = new Float32Array(parameters.count * 3)
     const colors = new Float32Array(parameters.count * 3)
+<<<<<<< HEAD
     const scales = new Float32Array(parameters * 1)
 
+=======
+>>>>>>> 35916a56f11011823bbb7b3bf7488b3b66a775a1
 
     const insideColor = new THREE.Color(parameters.insideColor)
     const outsideColor = new THREE.Color(parameters.outsideColor)
@@ -82,13 +88,19 @@ const generateGalaxy = () =>
         colors[i3    ] = mixedColor.r
         colors[i3 + 1] = mixedColor.g
         colors[i3 + 2] = mixedColor.b
+<<<<<<< HEAD
 
         scales[i] = Math.random()
+=======
+>>>>>>> 35916a56f11011823bbb7b3bf7488b3b66a775a1
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+<<<<<<< HEAD
     geometry.setAttribute('aScale', new BufferAttribute(scales, 1))
+=======
+>>>>>>> 35916a56f11011823bbb7b3bf7488b3b66a775a1
 
     /**
      * Material
@@ -96,6 +108,7 @@ const generateGalaxy = () =>
     material = new THREE.ShaderMaterial({
         depthWrite: false,
         blending: THREE.AdditiveBlending,
+<<<<<<< HEAD
         vertexColors: true,
         vertexShader: galaxtVertexShader,
         fragmentShader: galaxtFragmentShader,
@@ -103,6 +116,9 @@ const generateGalaxy = () =>
             uSize: {value: 10.0 * renderer.getPixelRatio()},
             uTime: {value: 0}
         }
+=======
+        vertexColors: true
+>>>>>>> 35916a56f11011823bbb7b3bf7488b3b66a775a1
     })
 
     /**
@@ -112,6 +128,10 @@ const generateGalaxy = () =>
     scene.add(points)
 }
 
+<<<<<<< HEAD
+=======
+generateGalaxy()
+>>>>>>> 35916a56f11011823bbb7b3bf7488b3b66a775a1
 
 gui.add(parameters, 'count').min(100).max(1000000).step(100).onFinishChange(generateGalaxy)
 gui.add(parameters, 'radius').min(0.01).max(20).step(0.01).onFinishChange(generateGalaxy)
@@ -167,8 +187,11 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+<<<<<<< HEAD
 generateGalaxy()
 
+=======
+>>>>>>> 35916a56f11011823bbb7b3bf7488b3b66a775a1
 /**
  * Animate
  */
@@ -178,8 +201,11 @@ const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
 
+<<<<<<< HEAD
     material.uniforms.uTime.value = elapsedTime
     // console.log(material.uniforms.uTime.value)
+=======
+>>>>>>> 35916a56f11011823bbb7b3bf7488b3b66a775a1
     // Update controls
     controls.update()
 
